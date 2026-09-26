@@ -33,6 +33,47 @@ It is especially useful when a router restarts overnight, an SSH connection drop
 
 Memory collection and search make no model calls. Asking Codex to write a checkpoint or resume work uses your normal Codex model access and tokens. Notes included in a Codex prompt are processed through that existing setup.
 
+## Why use this alongside native Codex resume?
+
+Codex already saves conversations and provides a session picker through `codex resume`.
+You do not need this project simply to reopen a chat or avoid copying a session ID.
+Session Recovery uses that existing resume command and adds a workflow for saving,
+collecting, and reading explicit handoff notes. See the [official resume documentation](https://learn.chatgpt.com/docs/developer-commands?surface=cli#codex-resume).
+
+| What you need | Native `codex resume` | What Session Recovery adds |
+| --- | --- | --- |
+| Reopen a saved conversation | Select a session and continue its existing history. | Select a collected checkpoint and resume its original session with instructions to read the handoff first. |
+| Quickly understand unfinished work | Continue from the conversation history. | A concise note covering the goal, decisions, progress, test results, and next actions. |
+| Prepare for a planned interruption | Resume is a command you run when returning to work. | Scheduled requests and collection before a router reset or other expected disconnect. |
+| Share findings between working sessions | Resume opens the selected conversation. | Searchable notes from multiple sessions in the same project, including explicitly contributed notes while work is still active. |
+| Inspect and manage your handoffs | Use Codex's saved session history. | Readable checkpoint files and a local SQLite index with source sessions and timestamps. |
+
+### How does this compare with native Codex memory?
+
+Codex also offers [built-in local memory](https://learn.chatgpt.com/docs/customization/memories?surface=app).
+Its documented background generation skips active or short-lived sessions and waits
+until eligible chats have been idle long enough. Session Recovery lets a working
+session explicitly contribute a finding or checkpoint for the next collector run,
+normally within about a minute. Its queries stay within the current project.
+
+The memory concept is shared; this project's particular choices are explicit
+contributions, project-scoped retrieval, and inspectable handoff files. Indexing
+and keyword search require no extra model calls or embedding service. Asking Codex
+to write the handoff still uses normal model tokens. Neither system guarantees that
+a remembered statement remains correct.
+
+### Which should you choose?
+
+**Native resume may be all you need** if you usually work in one session and simply
+want to return to its conversation. Native memory may also meet your needs for
+recalling prior work without another tool to maintain.
+
+**Consider Session Recovery** if you run several long tasks, want scheduled handoffs,
+or want sessions to share explicit project findings as they work. The tradeoff is
+an additional Linux installation, a running Codex daemon, timers, and compatibility
+maintenance. It still depends on the original Codex session history: it cannot
+restore a deleted session or guarantee that every change was checkpointed.
+
 ## System requirements
 
 | Requirement | Details |

@@ -1,0 +1,10 @@
+[Unit]
+Description=Collect shared project memory during normal work
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

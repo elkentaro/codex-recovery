@@ -1,0 +1,9 @@
+[Unit]
+Description=Index private project memory from existing Codex notes
+
+[Service]
+Type=oneshot
+WorkingDirectory=@ROOT@
+UMask=0077
+ExecStart=@MEMORY_COMMAND@ sync
+TimeoutStartSec=2min

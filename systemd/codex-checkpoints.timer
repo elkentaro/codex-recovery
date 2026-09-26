@@ -1,0 +1,10 @@
+[Unit]
+Description=Request Codex handoffs ahead of the 03:00 router reset
+
+[Timer]
+OnCalendar=*-*-* @REQUEST_TIME@ @TIMEZONE@
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target

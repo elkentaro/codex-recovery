@@ -1,0 +1,10 @@
+[Unit]
+Description=Request concise handoffs from loaded local Codex sessions
+
+[Service]
+Type=oneshot
+WorkingDirectory=@ROOT@
+Environment=TZ=@TIMEZONE@
+UMask=0077
+ExecStart=@COMMAND@ request --send
+TimeoutStartSec=10min

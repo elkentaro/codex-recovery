@@ -1,0 +1,10 @@
+[Unit]
+Description=Verify Codex handoffs before the router reset
+
+[Timer]
+OnCalendar=*-*-* @VERIFY_TIME@ @TIMEZONE@
+AccuracySec=30s
+Persistent=false
+
+[Install]
+WantedBy=timers.target

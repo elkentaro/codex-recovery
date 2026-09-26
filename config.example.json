@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "socket": "~/.codex/app-server-control/app-server-control.sock",
+  "log_dir": "~/codex-log"
+}

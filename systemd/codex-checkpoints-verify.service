@@ -1,0 +1,10 @@
+[Unit]
+Description=Verify and collect saved Codex handoffs
+
+[Service]
+Type=oneshot
+WorkingDirectory=@ROOT@
+Environment=TZ=@TIMEZONE@
+UMask=0077
+ExecStart=@COMMAND@ verify
+TimeoutStartSec=1min

@@ -127,12 +127,38 @@ Keep both the checkout and its `.venv` directory: the installed commands use the
 systemctl --user list-timers 'codex-checkpoints*' 'codex-project-memory*'
 ```
 
-Your systemd user manager must stay running for the schedules to run. If you need them to work while logged out, check whether your account has lingering enabled:
+Your systemd user manager must stay running for the schedules to run. **Lingering**
+starts that manager at boot and keeps it running after you log out, so enabled
+user timers can run without an open SSH connection or terminal.
+
+From the normal account you use for Codex, check the current setting:
 
 ```sh
 loginctl show-user "$USER" -p Linger
 ```
 
+If it reports `Linger=no`, enable lingering for that account:
+
+```sh
+loginctl enable-linger "$USER"
+```
+
+If your system requires administrator permission, run the following from that
+same user's shell, or ask your administrator to enable lingering for your account:
+
+```sh
+sudo loginctl enable-linger "$USER"
+```
+
+Confirm the result is `Linger=yes` and check that your timers are listed:
+
+```sh
+loginctl show-user "$USER" -p Linger
+systemctl --user list-timers 'codex-checkpoints*' 'codex-project-memory*'
+```
+
+Lingering keeps the user service manager available; the timers must still be
+enabled and the Codex daemon must be running for checkpoint requests to work.
 The installer does not enable lingering or change host administration settings.
 
 ### 3. Recover when you need to
@@ -249,7 +275,7 @@ Running the installer without either flag refreshes the installation and preserv
 | The recovery list is empty | A checkpoint must be requested, written, and collected first. Check the nightly service logs below. |
 | No sessions are discovered | Check that your existing local Codex daemon is running under this account and that the private config points to its accessible socket. |
 | A new memory note is missing | Allow about a minute, check `codex-memory project`, and inspect the memory collector logs. |
-| Nightly jobs do not run while logged out | Check the user timers and whether the user manager remains running. |
+| Nightly jobs do not run while logged out | Check the user timers and enable lingering as described in [Check the schedules](#2-check-the-schedules). |
 | Memory capture reports a thread-identity error | The checkpoint must identify the current session using `Thread ID: UUID` (also accepts `Thread: UUID`) or its scheduled marker. If both are present, their IDs must agree with the actual `CODEX_THREAD_ID`. |
 | Recovery cannot open a session | Confirm that its original Codex history and project directory still exist. |
 
